@@ -1,7 +1,7 @@
 import { StatusBar, StyleSheet, Text, useColorScheme, View, Button, Platform, Alert, Image } from 'react-native';
 import { AMapSdk, MapView } from 'react-native-amap3d';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { useAppStore } from './src/store/useAppStore';
 
@@ -21,26 +21,26 @@ function App() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NavigationContainer>
-        <Tab.Navigator
-          initialRouteName="Home"
-          screenOptions={({ route }) => ({
-            headerShown: false,
-            tabBarStyle: {
-              height: 60,
-              paddingBottom: 8,
-              paddingTop: 6,
-              borderTopWidth: StyleSheet.hairlineWidth,
-              borderTopColor: '#ddd',
-              backgroundColor: '#ffffff',
-            },
+      <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left', 'right']}>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <NavigationContainer>
+          <Tab.Navigator
+            initialRouteName="Home"
+            screenOptions={({ route }) => ({
+              headerShown: false,
+              tabBarStyle: {
+                paddingBottom: 8,
+                paddingTop: 6,
+                borderTopWidth: StyleSheet.hairlineWidth,
+                borderTopColor: '#ddd',
+                backgroundColor: '#ffffff',
+              },
             tabBarActiveTintColor: '#1677ff',
             tabBarInactiveTintColor: '#999999',
-            tabBarLabelStyle: {
-              fontSize: 11,
-            },
-            tabBarIcon: ({ focused, color, size }) => {
+              tabBarLabelStyle: {
+                fontSize: 11,
+              },
+              tabBarIcon: ({ focused, color, size }) => {
               let iconUri = '';
 
               if (route.name === 'Home') {
@@ -80,14 +80,15 @@ function App() {
                *
                * return <Image source={source} style={{ width: size, height: size }} />;
                */
-            },
-          })}
-        >
-          <Tab.Screen name="Home" component={HomeScreen} options={{ title: '首页' }} />
-          <Tab.Screen name="Details" component={DetailsScreen} options={{ title: '详情' }} />
-          <Tab.Screen name="Map" component={MapScreen} options={{ title: '地图' }} />
-        </Tab.Navigator>
-      </NavigationContainer>
+              },
+            })}
+          >
+            <Tab.Screen name="Home" component={HomeScreen} options={{ title: '首页' }} />
+            <Tab.Screen name="Details" component={DetailsScreen} options={{ title: '详情' }} />
+            <Tab.Screen name="Map" component={MapScreen} options={{ title: '地图' }} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
