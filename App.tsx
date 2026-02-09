@@ -1,4 +1,4 @@
-import { StatusBar, StyleSheet, Text, useColorScheme, View, Button, Platform } from 'react-native';
+import { StatusBar, StyleSheet, Text, useColorScheme, View, Button, Platform, Alert } from 'react-native';
 import { AMapSdk, MapView } from 'react-native-amap3d';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -42,6 +42,12 @@ function HomeScreen({ navigation }: { navigation: any }) {
       <Text style={styles.title}>Home Screen</Text>
       <Text style={styles.counterText}>Global Count: {count}</Text>
       <Button title="Increment Count" onPress={increment} />
+      <Button
+        title="Show Count Alert"
+        onPress={() => {
+          Alert.alert('当前计数', `Global Count: ${count}`);
+        }}
+      />
       <Button
         title="Go to Details"
         onPress={() => navigation.navigate('Details')}
