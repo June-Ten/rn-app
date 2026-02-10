@@ -17,8 +17,9 @@ const pushyClient = new Pushy({
   // 注意，默认情况下，在开发环境中不会检查更新
   // 如需在开发环境中调试更新，请设置debug为true
   // 但即便打开此选项，也仅能检查、下载热更，并不能实际应用热更。实际应用热更必须在release包中进行。
-  debug: true,
-  updateStrategy: "alwaysAlert"
+  // debug: true,
+  checkStrategy: "onAppStart", // 仅在启动时检查
+  // updateStrategy: "alwaysAlert"
 });
 
 const Tab = createBottomTabNavigator();
