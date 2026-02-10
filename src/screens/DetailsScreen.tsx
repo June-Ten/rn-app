@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Button, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
 import { FlashList } from '@shopify/flash-list';
 import { styles } from './styles';
@@ -32,8 +33,9 @@ const DATA = [
 
 export function DetailsScreen({ navigation }: DetailsScreenProps) {
   const actionSheetRef = useRef<ActionSheetRef>(null);
+  const insets = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
       <Text style={styles.title}>Details Screen123</Text>
       <Text style={styles.title}>热更新测试版本0.2</Text>
       <Button title="Go back" onPress={() => navigation.goBack()} />
