@@ -76,3 +76,6 @@ yarn-error.log
 
 # code pushy
 .update
+
+# react-native-update
+.pushy

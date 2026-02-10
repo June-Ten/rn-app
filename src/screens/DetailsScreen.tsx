@@ -35,7 +35,7 @@ export function DetailsScreen({ navigation }: DetailsScreenProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Details Screen123</Text>
-      <Text style={styles.title}>Details Screen123</Text>
+      <Text style={styles.title}>热更新测试版本0.2</Text>
       <Button title="Go back" onPress={() => navigation.goBack()} />
       <Button title="Open ActionSheet" onPress={() => actionSheetRef.current?.show()} />
       <View style={styles.listContainer}>
