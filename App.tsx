@@ -1,14 +1,15 @@
-import { StatusBar, StyleSheet, useColorScheme, Platform, Image } from 'react-native';
+import { StatusBar, StyleSheet, useColorScheme, Platform, Image,Text, View, TouchableOpacity  } from 'react-native';
 import { AMapSdk } from 'react-native-amap3d';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { UpdateProvider, Pushy } from "react-native-update";
+import { UpdateProvider, Pushy, useUpdate } from "react-native-update";
+import { Icon, PaperProvider, Snackbar, Banner } from "react-native-paper";
 import { HomeScreen } from './src/screens/HomeScreen';
 import { DetailsScreen } from './src/screens/DetailsScreen';
 import { MapScreen } from './src/screens/MapScreen';
- 
+import { useState } from 'react';
 import _updateConfig from "./update.json";
 const { appKey } = _updateConfig[Platform.OS as keyof typeof _updateConfig];
 
@@ -17,7 +18,8 @@ const pushyClient = new Pushy({
   // 注意，默认情况下，在开发环境中不会检查更新
   // 如需在开发环境中调试更新，请设置debug为true
   // 但即便打开此选项，也仅能检查、下载热更，并不能实际应用热更。实际应用热更必须在release包中进行。
-  // debug: true,
+  debug: true,
+  updateStrategy: null,
   checkStrategy: "onAppStart", // 仅在启动时检查
   // updateStrategy: "alwaysAlert"
 });
@@ -48,11 +50,80 @@ function App() {
     }) as string,
   );
 
+  const {
+    client,
+    checkUpdate,
+    downloadUpdate,
+    switchVersionLater,
+    switchVersion,
+    updateInfo,
+    packageVersion,
+    currentHash,
+    progress: { received, total } = {},
+  } = useUpdate();
+  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
+  const [showUpdateSnackbar, setShowUpdateSnackbar] = useState(false);
+  const snackbarVisible = showUpdateSnackbar && updateInfo?.update;
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left', 'right']}>
           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+    <View style={{height: 100, marginTop: 20, backgroundColor: 'red'}}>
+      <Text>
+        更新下载进度：{received} / {total}
+      </Text>
+      <TouchableOpacity
+        onPress={() => {
+          checkUpdate();
+          setShowUpdateSnackbar(true);
+        }}
+      >
+        <Text>点击这里检查更新</Text>
+      </TouchableOpacity>
+      {snackbarVisible && (
+        <Snackbar
+          visible={true}
+          onDismiss={() => {
+            setShowUpdateSnackbar(false);
+          }}
+          action={{
+            label: "更新",
+            onPress: async () => {
+              setShowUpdateSnackbar(false);
+              if (await downloadUpdate()) {
+                setShowUpdateBanner(true);
+              }
+            },
+          }}
+        >
+          <Text>有新版本({updateInfo.name})可用，是否更新？</Text>
+        </Snackbar>
+      )}
+      <Banner
+        style={{ width: "100%", position: "absolute", top: 0 }}
+        visible={showUpdateBanner}
+        actions={[
+          {
+            label: "立即重启",
+            onPress: switchVersion,
+          },
+          {
+            label: "下次再说",
+            onPress: () => {
+              switchVersionLater();
+              setShowUpdateBanner(false);
+            },
+          },
+        ]}
+        icon={({ size }) => (
+          <Icon name="checkcircleo" size={size} color="#00f" />
+        )}
+      >
+        更新已完成，是否立即重启？
+      </Banner>
+    </View>
           <NavigationContainer>
             <Tab.Navigator
               initialRouteName="Home"

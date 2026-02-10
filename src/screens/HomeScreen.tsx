@@ -30,6 +30,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
         title="Open Map"
         onPress={() => navigation.navigate('Map')}
       />
+      
     </View>
   );
 }
