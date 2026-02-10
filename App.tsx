@@ -4,11 +4,36 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { UpdateProvider, Pushy } from "react-native-update";
 import { HomeScreen } from './src/screens/HomeScreen';
 import { DetailsScreen } from './src/screens/DetailsScreen';
 import { MapScreen } from './src/screens/MapScreen';
+ 
+import _updateConfig from "./update.json";
+const { appKey } = _updateConfig[Platform.OS as keyof typeof _updateConfig];
+
+const pushyClient = new Pushy({
+  appKey,
+  // 注意，默认情况下，在开发环境中不会检查更新
+  // 如需在开发环境中调试更新，请设置debug为true
+  // 但即便打开此选项，也仅能检查、下载热更，并不能实际应用热更。实际应用热更必须在release包中进行。
+  debug: true,
+  updateStrategy: "alwaysAlert"
+});
 
 const Tab = createBottomTabNavigator();
+
+// 在根组件外加上 UpdateProvider 后导出
+export default function Root() {
+  // 注意，在使用 UpdateProvider 的当前组件中，无法直接调用 useUpdate
+  // 只有当前组件的子组件才能调用 useUpdate
+  return (
+    <UpdateProvider client={pushyClient}>
+      {/* ↓ 整个应用的根组件放到 UpdateProvider 中 */}
+      <App />
+    </UpdateProvider>
+  );
+}
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -86,4 +111,4 @@ function App() {
   );
 }
 
-export default App;
+// export default App;
