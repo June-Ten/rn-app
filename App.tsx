@@ -1,15 +1,14 @@
-import { StatusBar, StyleSheet, useColorScheme, Platform, Image,Text, View, TouchableOpacity  } from 'react-native';
+import { StatusBar, StyleSheet, useColorScheme, Platform, Image } from 'react-native';
 import { AMapSdk } from 'react-native-amap3d';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { UpdateProvider, Pushy, useUpdate } from "react-native-update";
-import { Icon, PaperProvider, Snackbar, Banner } from "react-native-paper";
+import { UpdateProvider, Pushy } from "react-native-update";
 import { HomeScreen } from './src/screens/HomeScreen';
 import { DetailsScreen } from './src/screens/DetailsScreen';
 import { MapScreen } from './src/screens/MapScreen';
-import { useState } from 'react';
+import { SettingScreen } from './src/screens/SettingScreen.tsx';
 import _updateConfig from "./update.json";
 const { appKey } = _updateConfig[Platform.OS as keyof typeof _updateConfig];
 
@@ -50,80 +49,11 @@ function App() {
     }) as string,
   );
 
-  const {
-    client,
-    checkUpdate,
-    downloadUpdate,
-    switchVersionLater,
-    switchVersion,
-    updateInfo,
-    packageVersion,
-    currentHash,
-    progress: { received, total } = {},
-  } = useUpdate();
-  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
-  const [showUpdateSnackbar, setShowUpdateSnackbar] = useState(false);
-  const snackbarVisible = showUpdateSnackbar && updateInfo?.update;
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left', 'right']}>
           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-    <View style={{height: 100, marginTop: 20, backgroundColor: 'red'}}>
-      <Text>
-        更新下载进度：{received} / {total}
-      </Text>
-      <TouchableOpacity
-        onPress={() => {
-          checkUpdate();
-          setShowUpdateSnackbar(true);
-        }}
-      >
-        <Text>点击这里检查更新</Text>
-      </TouchableOpacity>
-      {snackbarVisible && (
-        <Snackbar
-          visible={true}
-          onDismiss={() => {
-            setShowUpdateSnackbar(false);
-          }}
-          action={{
-            label: "更新",
-            onPress: async () => {
-              setShowUpdateSnackbar(false);
-              if (await downloadUpdate()) {
-                setShowUpdateBanner(true);
-              }
-            },
-          }}
-        >
-          <Text>有新版本({updateInfo.name})可用，是否更新？</Text>
-        </Snackbar>
-      )}
-      <Banner
-        style={{ width: "100%", position: "absolute", top: 0 }}
-        visible={showUpdateBanner}
-        actions={[
-          {
-            label: "立即重启",
-            onPress: switchVersion,
-          },
-          {
-            label: "下次再说",
-            onPress: () => {
-              switchVersionLater();
-              setShowUpdateBanner(false);
-            },
-          },
-        ]}
-        icon={({ size }) => (
-          <Icon name="checkcircleo" size={size} color="#00f" />
-        )}
-      >
-        更新已完成，是否立即重启？
-      </Banner>
-    </View>
           <NavigationContainer>
             <Tab.Navigator
               initialRouteName="Home"
@@ -156,6 +86,10 @@ function App() {
                     iconUri = focused
                       ? 'https://img.icons8.com/fluency/48/map.png'
                       : 'https://img.icons8.com/ios-glyphs/30/map.png';
+                  } else if (route.name === 'Setting') {
+                    iconUri = focused
+                      ? 'https://img.icons8.com/fluency/48/setting.png'
+                      : 'https://img.icons8.com/ios-glyphs/30/setting.png';
                   }
 
                   return (
@@ -175,6 +109,7 @@ function App() {
               <Tab.Screen name="Home" component={HomeScreen} options={{ title: '首页' }} />
               <Tab.Screen name="Details" component={DetailsScreen} options={{ title: '详情' }} />
               <Tab.Screen name="Map" component={MapScreen} options={{ title: '地图' }} />
+              <Tab.Screen name="Setting" component={SettingScreen} options={{ title: '设置' }} />
             </Tab.Navigator>
           </NavigationContainer>
         </SafeAreaView>
