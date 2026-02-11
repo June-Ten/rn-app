@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { MapView } from 'react-native-amap3d';
+// import { MapView } from 'react-native-amap3d';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,12 +12,12 @@ export function MapScreen() {
 
   return (
     <View style={sharedStyles.mapContainer}>
-      <MapView
+      {/* <MapView
         style={StyleSheet.absoluteFill}
         onLoad={() => {
           console.log('AMap loaded');
         }}
-      />
+      /> */}
 
       <View style={[sharedStyles.mapTopBar, { paddingTop: insets.top + 8 }]}>
         <Pressable onPress={() => navigation.goBack()} style={sharedStyles.mapBackBtn}>

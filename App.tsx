@@ -1,5 +1,5 @@
 import { StatusBar, StyleSheet, useColorScheme, Platform, Image } from 'react-native';
-import { AMapSdk } from 'react-native-amap3d';
+// import { AMapSdk } from 'react-native-amap3d';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -18,8 +18,8 @@ const pushyClient = new Pushy({
   // 注意，默认情况下，在开发环境中不会检查更新
   // 如需在开发环境中调试更新，请设置debug为true
   // 但即便打开此选项，也仅能检查、下载热更，并不能实际应用热更。实际应用热更必须在release包中进行。
-  debug: true,
-  updateStrategy: null,
+  debug: false,
+  // updateStrategy: null,
   checkStrategy: "onAppStart", // 仅在启动时检查
   // updateStrategy: "alwaysAlert"
 });
@@ -47,13 +47,13 @@ function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   // 初始化高德地图 SDK（请替换为你自己的 key）
-  AMapSdk.init(
-    Platform.select({
-      android: '178f44408e8a8269a01e572bfc4dd2d1',
-      ios: '178f44408e8a8269a01e572bfc4dd2d1',
-      default: '',
-    }) as string,
-  );
+  // AMapSdk.init(
+  //   Platform.select({
+  //     android: '178f44408e8a8269a01e572bfc4dd2d1',
+  //     ios: '178f44408e8a8269a01e572bfc4dd2d1',
+  //     default: '',
+  //   }) as string,
+  // );
 
   return (
     <GestureHandlerRootView style={styles.flex1}>
