@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { UpdateProvider, Pushy } from "react-native-update";
 import { HomeScreen } from './src/screens/HomeScreen';
 import { DetailsScreen } from './src/screens/DetailsScreen';
+import { ItemDetailScreen } from './src/screens/ItemDetailScreen';
 import { MapScreen } from './src/screens/MapScreen';
 import { SettingScreen } from './src/screens/SettingScreen.tsx';
 import _updateConfig from "./update.json";
@@ -64,6 +65,15 @@ function App() {
             <Stack.Navigator screenOptions={{ headerShown: false }}>
               <Stack.Screen name="Tabs" component={MainTabs} />
               <Stack.Screen name="Map" component={MapScreen} />
+              <Stack.Screen
+                name="ItemDetail"
+                component={ItemDetailScreen}
+                options={{
+                  presentation: 'transparentModal',
+                  animation: 'none',
+                  contentStyle: { backgroundColor: 'transparent' },
+                }}
+              />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaView>

@@ -113,6 +113,69 @@ export const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 16,
   },
+
+  // ---------- Hero 列表项 ----------
+  heroListItem: {
+    marginHorizontal: 4,
+    marginVertical: 6,
+    borderRadius: 12,
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+  },
+  heroListItemTitle: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  heroListItemSubtitle: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 12,
+    marginTop: 4,
+  },
+
+  // ---------- Hero 详情页 ----------
+  heroRoot: {
+    flex: 1,
+  },
+  heroBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#ffffff',
+  },
+  heroCard: {
+    position: 'absolute',
+    overflow: 'hidden',
+  },
+  heroCardTitle: {
+    color: '#ffffff',
+    fontWeight: '700',
+  },
+  heroContent: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  heroDesc: {
+    fontSize: 15,
+    lineHeight: 22,
+    color: '#111827',
+  },
+  heroDescMuted: {
+    marginTop: 12,
+    fontSize: 13,
+    color: '#6b7280',
+  },
+  heroBackBtn: {
+    marginTop: 24,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 999,
+    backgroundColor: '#111827',
+  },
+  heroBackBtnText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
 });
 
 

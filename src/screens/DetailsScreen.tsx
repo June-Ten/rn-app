@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
-import { Button, Text, View } from 'react-native';
+import React, { useCallback, useRef } from 'react';
+import { Button, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
+import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
 import { FlashList } from '@shopify/flash-list';
 import { styles } from './styles';
 
@@ -9,31 +9,66 @@ interface DetailsScreenProps {
   navigation: any;
 }
 
-const DATA = [
-  { id: '1', title: '项目 1' },
-  { id: '2', title: '项目 2' },
-  { id: '3', title: '项目 3' },
-  { id: '4', title: '项目 4' },
-  { id: '5', title: '项目 5' },
-  { id: '6', title: '项目 6' },
-  { id: '7', title: '项目 7' },
-  { id: '8', title: '项目 8' },
-  { id: '9', title: '项目 9' },
-  { id: '10', title: '项目 10' },
-  { id: '11', title: '项目 11' },
-  { id: '12', title: '项目 12' },
-  { id: '13', title: '项目 13' },
-  { id: '14', title: '项目 14' },
-  { id: '15', title: '项目 15' },
-  { id: '16', title: '项目 16' },
-  { id: '17', title: '项目 17' },
-  { id: '18', title: '项目 18' },
-  { id: '19', title: '项目 19' },
+const COLORS = [
+  '#ef4444',
+  '#f59e0b',
+  '#10b981',
+  '#3b82f6',
+  '#8b5cf6',
+  '#ec4899',
+  '#06b6d4',
+  '#14b8a6',
 ];
+
+type ListItem = { id: string; title: string; color: string };
+
+const RAW_DATA: Array<{ id: string; title: string }> = Array.from({ length: 19 }, (_, i) => ({
+  id: String(i + 1),
+  title: `项目 ${i + 1}`,
+}));
+
+const DATA: ListItem[] = RAW_DATA.map((it, i) => ({
+  ...it,
+  color: COLORS[i % COLORS.length],
+}));
+
+interface HeroItemProps {
+  item: ListItem;
+  onPressItem: (item: ListItem, origin: { x: number; y: number; width: number; height: number }) => void;
+}
+
+function HeroItem({ item, onPressItem }: HeroItemProps) {
+  const ref = useRef<View>(null);
+
+  const handlePress = useCallback(() => {
+    const node = ref.current;
+    if (!node) {return;}
+    node.measureInWindow((x, y, width, height) => {
+      onPressItem(item, { x, y, width, height });
+    });
+  }, [item, onPressItem]);
+
+  return (
+    <Pressable onPress={handlePress}>
+      <View ref={ref} style={[styles.heroListItem, { backgroundColor: item.color }]}>
+        <Text style={styles.heroListItemTitle}>{item.title}</Text>
+        <Text style={styles.heroListItemSubtitle}>点击查看详情 →</Text>
+      </View>
+    </Pressable>
+  );
+}
 
 export function DetailsScreen({ navigation }: DetailsScreenProps) {
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const insets = useSafeAreaInsets();
+
+  const handlePressItem = useCallback(
+    (item: ListItem, origin: { x: number; y: number; width: number; height: number }) => {
+      navigation.navigate('ItemDetail', { item, origin });
+    },
+    [navigation],
+  );
+
   return (
     <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
       <Text style={styles.title}>Details Screen123</Text>
@@ -43,7 +78,7 @@ export function DetailsScreen({ navigation }: DetailsScreenProps) {
       <View style={styles.listContainer}>
         <FlashList
           data={DATA}
-          renderItem={({ item }) => <Text style={styles.listItem}>{item.title}</Text>}
+          renderItem={({ item }) => <HeroItem item={item} onPressItem={handlePressItem} />}
           keyExtractor={(item) => item.id}
         />
       </View>
@@ -56,5 +91,3 @@ export function DetailsScreen({ navigation }: DetailsScreenProps) {
     </View>
   );
 }
-
-
